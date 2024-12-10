@@ -34,14 +34,12 @@ public class TransactionConverter {
 
     public TransactionEntity convertToEntity(TransactionDTO transactionDTO) {
         TransactionEntity transactionEntity = modelMapper.map(transactionDTO, TransactionEntity.class);
-        CustomerEntity customerEntity = customerRepository.findById(transactionDTO.getCustomerId())
-                .orElseThrow(() -> new MyException("Customer not found"));
+        CustomerEntity customerEntity = customerRepository.findById(transactionDTO.getCustomerId());
         transactionEntity.setCustomer(customerEntity);
         Long id = transactionDTO.getId();
 
         if (id != null) {
-            TransactionEntity transaction = transactionRepository.findById(id)
-                    .orElseThrow(() -> new MyException("Transaction not found"));
+            TransactionEntity transaction = transactionRepository.findById(id);
             transactionEntity.setCreatedBy(transaction.getCreatedBy());
             transactionEntity.setCreatedDate(transaction.getCreatedDate());
             transactionEntity.setModifiedBy(transaction.getModifiedBy());

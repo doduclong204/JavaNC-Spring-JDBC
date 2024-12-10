@@ -4,6 +4,9 @@ import com.javaweb.model.dto.MyUserDetail;
 import com.javaweb.model.dto.RoleDTO;
 import com.javaweb.model.dto.UserDTO;
 import com.javaweb.service.IUserService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,10 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomUserDetailService implements UserDetailsService {
 
-    @Autowired
-    private IUserService userService;
+    IUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {

@@ -5,6 +5,9 @@ import com.javaweb.entity.RoleEntity;
 import com.javaweb.model.dto.RoleDTO;
 import com.javaweb.repository.RoleRepository;
 import com.javaweb.service.IRoleService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleService implements IRoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private RoleConverter roleConverter;
+    RoleRepository roleRepository;
+    RoleConverter roleConverter;
 
     public List<RoleDTO> findAll() {
         List<RoleEntity> roleEntities = roleRepository.findAll();

@@ -14,8 +14,11 @@ import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.CustomerRepository;
 import com.javaweb.repository.RoleRepository;
 import com.javaweb.repository.UserRepository;
+import com.javaweb.repository.custom.UserRepositoryCustom;
 import com.javaweb.service.IUserService;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,14 +35,16 @@ import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService implements IUserService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final UserConverter userConverter;
-    private final BuildingRepository buildingRepository;
-    private final CustomerRepository customerRepository;
+    UserRepository userRepository;
+    UserRepositoryCustom userRepositoryCustom;
+    RoleRepository roleRepository;
+    PasswordEncoder passwordEncoder;
+    UserConverter userConverter;
+    BuildingRepository buildingRepository;
+    CustomerRepository customerRepository;
 
     @Override
     public UserDTO findOneByUserNameAndStatus(String name, int status) {
@@ -67,7 +72,7 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserDTO> getAllUsers(Pageable pageable) {
-        List<UserEntity> userEntities = userRepository.getAllUsers(pageable);
+        List<UserEntity> userEntities = userRepositoryCustom.getAllUsers(pageable);
         List<UserDTO> results = new ArrayList<>();
         for (UserEntity userEntity : userEntities) {
             UserDTO userDTO = userConverter.convertToDto(userEntity);
@@ -79,7 +84,7 @@ public class UserService implements IUserService {
 
     @Override
     public int countTotalItems() {
-        return userRepository.countTotalItem();
+        return userRepositoryCustom.countTotalItem();
     }
 
     @Override
@@ -123,7 +128,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserDTO findUserById(long id) {
-        UserEntity entity = userRepository.findById(id).get();
+        UserEntity entity = userRepository.findById(id);
         List<RoleEntity> roles = entity.getRoles();
         UserDTO dto = userConverter.convertToDto(entity);
         roles.forEach(item -> {
@@ -147,7 +152,7 @@ public class UserService implements IUserService {
     @Transactional
     public UserDTO update(Long id, UserDTO updateUser) {
         RoleEntity role = roleRepository.findOneByCode(updateUser.getRoleCode());
-        UserEntity oldUser = userRepository.findById(id).get();
+        UserEntity oldUser = userRepository.findById(id);
         UserEntity userEntity = userConverter.convertToEntity(updateUser);
         userEntity.setUserName(oldUser.getUserName());
         userEntity.setStatus(oldUser.getStatus());
@@ -159,7 +164,7 @@ public class UserService implements IUserService {
     @Override
     @Transactional
     public void updatePassword(long id, PasswordDTO passwordDTO) throws MyException {
-        UserEntity user = userRepository.findById(id).get();
+        UserEntity user = userRepository.findById(id);
         if (passwordEncoder.matches(passwordDTO.getOldPassword(), user.getPassword())
                 && passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword())) {
             user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
@@ -172,7 +177,7 @@ public class UserService implements IUserService {
     @Override
     @Transactional
     public UserDTO resetPassword(long id) {
-        UserEntity userEntity = userRepository.findById(id).get();
+        UserEntity userEntity = userRepository.findById(id);
         userEntity.setPassword(passwordEncoder.encode(SystemConstant.PASSWORD_DEFAULT));
         return userConverter.convertToDto(userRepository.save(userEntity));
     }
@@ -189,7 +194,7 @@ public class UserService implements IUserService {
     @Transactional
     public void delete(long[] ids) {
         for (Long item : ids) {
-            UserEntity userEntity = userRepository.findById(item).get();
+            UserEntity userEntity = userRepository.findById(item);
             userEntity.setStatus(0);
             userRepository.save(userEntity);
         }
@@ -219,14 +224,12 @@ public class UserService implements IUserService {
 
     private List<Long> getAssignedStaffIdsBuilding(Long buildingId) {
         return buildingRepository.findById(buildingId)
-                .orElseThrow(() -> new MyException("Building not found!"))
                 .getStaffs().stream().map(UserEntity::getId)
                 .collect(Collectors.toList());
     }
 
     private List<Long> getAssignedStaffIdsCustomer(Long customerId) {
         return customerRepository.findById(customerId)
-                .orElseThrow(() -> new MyException("Customer not found!"))
                 .getUsers().stream().map(UserEntity::getId)
                 .collect(Collectors.toList());
     }

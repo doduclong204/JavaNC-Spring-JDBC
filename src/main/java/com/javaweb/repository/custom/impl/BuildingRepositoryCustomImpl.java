@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
+public class BuildingRepositoryCustomImpl implements BuildingRepositoryCustom {
 
     @PersistenceContext
     private EntityManager entityManager;

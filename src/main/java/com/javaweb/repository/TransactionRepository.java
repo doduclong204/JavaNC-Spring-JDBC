@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface TransactionRepository {
     List<TransactionEntity> findByCodeAndCustomerId(String code, Long customerId);
+
+    TransactionEntity findById(Long id);
+
+    void save(TransactionEntity transaction);
 }

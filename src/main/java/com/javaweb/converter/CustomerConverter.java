@@ -22,8 +22,7 @@ public class CustomerConverter {
         Long customerId = customerDTO.getId();
 
         if (customerId != null) {
-            CustomerEntity customer = customerRepository.findById(customerId)
-                    .orElseThrow(() -> new MyException("Customer not found"));
+            CustomerEntity customer = customerRepository.findById(customerId);
             customerEntity.setUsers(customer.getUsers());
             customerEntity.setCreatedBy(customer.getCreatedBy());
             customerEntity.setCreatedDate(customer.getCreatedDate());

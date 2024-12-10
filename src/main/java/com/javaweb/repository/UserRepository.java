@@ -27,4 +27,10 @@ public interface UserRepository {
     UserEntity findByUserName(String userName);
 
     boolean existsByUserName(String userName);
+
+    List<UserEntity> findAllById(List<Long> ids);
+
+    UserEntity findById(Long id);
+
+    UserEntity save(UserEntity user);
 }

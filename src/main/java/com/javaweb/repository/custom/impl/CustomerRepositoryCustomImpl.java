@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 @Repository
-public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
+public class CustomerRepositoryCustomImpl implements CustomerRepositoryCustom {
 
     @PersistenceContext
     private EntityManager entityManager;

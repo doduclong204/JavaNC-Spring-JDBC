@@ -9,35 +9,40 @@ import com.javaweb.model.dto.CustomerDTO;
 import com.javaweb.model.request.CustomerSearchRequest;
 import com.javaweb.repository.CustomerRepository;
 import com.javaweb.repository.UserRepository;
+import com.javaweb.repository.custom.CustomerRepositoryCustom;
 import com.javaweb.service.ICustomerService;
 import com.javaweb.utils.StringUtils;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomerService implements ICustomerService {
 
-    private final CustomerRepository customerRepository;
-    private final CustomerConverter customerConverter;
-    private final UserRepository userRepository;
+    CustomerRepository customerRepository;
+    CustomerRepositoryCustom customerRepositoryCustom;
+    CustomerConverter customerConverter;
+    UserRepository userRepository;
 
     @Override
     public List<CustomerEntity> findAll(CustomerSearchRequest customerSearchRequest) {
-        return customerRepository.findAll(customerSearchRequest);
+        return customerRepositoryCustom.findAll(customerSearchRequest);
     }
 
     @Override
     public int countTotalItem(CustomerSearchRequest customerSearchRequest) {
-        return customerRepository.countTotalItem(customerSearchRequest);
+        return customerRepositoryCustom.countTotalItem(customerSearchRequest);
     }
 
     @Override
     public CustomerEntity findById(Long id) {
-        return customerRepository.findById(id).orElseThrow(() -> new MyException("Customer Not Found"));
+        return customerRepository.findById(id);
     }
 
     @Transactional
@@ -67,8 +72,7 @@ public class CustomerService implements ICustomerService {
                 throw new MyException("Customer not found!");
             } else {
                 for (Long id : ids) {
-                    CustomerEntity customer = customerRepository.findById(id)
-                            .orElseThrow(() -> new MyException("Customer Not Found"));
+                    CustomerEntity customer = customerRepository.findById(id);
                     customer.setIsActive((byte) 0);
                     customerRepository.save(customer);
                 }
@@ -81,8 +85,7 @@ public class CustomerService implements ICustomerService {
     @Transactional
     @Override
     public void updateAssignmentCustomer(AssignmentCustomerDTO assignmentCustomerDTO) {
-        CustomerEntity customer = customerRepository.findById(assignmentCustomerDTO.getCustomerId())
-                .orElseThrow(() -> new MyException("Customer Not Found"));
+        CustomerEntity customer = customerRepository.findById(assignmentCustomerDTO.getCustomerId());
 
         List<UserEntity> staffs = userRepository.findAllById(assignmentCustomerDTO.getStaffs());
         customer.setUsers(staffs);
