@@ -42,8 +42,12 @@ git clone https://github.com/NamVu5404/JavaNC-Spring-JDBC.git
 - Quản lý tòa nhà.
 - Quản lý tài khoản.
 - Quản lý khách hàng.
+- Tìm kiếm khách hàng.
+- Tìm kiếm tài khoản
 
 ### Khách hàng:
-- Tìm kiếm sản phẩm.
+- Đăng nhập
+- Đăng ký
+- Tìm kiếm tòa nhà.
 - Liên hệ.
-- Xem thông tin sản phẩm.
+- Xem tin tức.
