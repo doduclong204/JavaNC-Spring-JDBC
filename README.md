@@ -34,20 +34,15 @@ git clone https://github.com/NamVu5404/JavaNC-Spring-JDBC.git
 - Máy tính cần cài đặt **JDK 1.8** trở lên.
 
 ## Phạm vi của dự án:
-
-### Đăng nhập:
-- Phân quyền: Admin, Staff và User.
-
 ### Admin:
-- Quản lý tòa nhà.
-- Quản lý tài khoản.
-- Quản lý khách hàng.
-- Tìm kiếm khách hàng.
-- Tìm kiếm tài khoản
+○	Quản lý khách hàng
+○	Quản lý tòa nhà
+○	Quản lý tài khoản.
+○	Tìm kiếm khách hàng
+○	Tìm kiếm tài khoản
 
 ### Khách hàng:
-- Đăng nhập
-- Đăng ký
-- Tìm kiếm tòa nhà.
-- Liên hệ.
-- Xem tin tức.
+○	Đăng nhập 
+○	Đăng ký
+○	Tìm kiếm tòa nhà
+○	Xem tin tức
